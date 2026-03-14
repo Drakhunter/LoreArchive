@@ -1,0 +1,16 @@
+# Windows thumbnail databases
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Backup and temporary files
+*~
+*.bak
+*.tmp
+*.temp
+
+# IDE / Editor settings
+.vscode/
+.idea/
+*.swp
+*.swo

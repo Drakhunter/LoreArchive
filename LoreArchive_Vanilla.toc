@@ -1,0 +1,10 @@
+## Interface: 11502
+## Title: Lore Archive
+## Notes: Collects and archives all in-game lore books, letters, and plaques.
+## Author: Antigravity
+## Version: 1.0.0
+## SavedVariables: LoreArchiveDB
+
+Core.lua
+Collector.lua
+UI.lua
