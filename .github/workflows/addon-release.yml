@@ -26,12 +26,12 @@ jobs:
 
       - name: Build project
         run: |
-          zip -r "${{ github.event.repository.name }}" . \
-            -x "*.git*" \
-            -x "README.md" \
-            -x "addon-meta.yml" \
-            -x ".travis.yml" \
-            -x ".github/*"
+          # Zip only the addon folder (and its contents) so the release artifact matches a typical WoW AddOn deploy
+          zip -r "${{ github.event.repository.name }}" LoreArchive \
+            -x "LoreArchive/.git*" \
+            -x "LoreArchive/README.md" \
+            -x "LoreArchive/.travis.yml" \
+            -x "LoreArchive/.github/*"
 
       - name: Create Release
         id: create_release
