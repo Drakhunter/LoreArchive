@@ -1,0 +1,59 @@
+name: Addon release
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  Build:
+    name: Create release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get current date for release
+        id: release_date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d %H:%M')"
+
+      - name: Get current date for tag
+        id: tag_date
+        run: echo "::set-output name=date::$(date +'%Y%m%d%H%M')"
+
+      - uses: actions/checkout@v3
+
+      - name: Set short sha
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
+      - name: Build project
+        run: |
+          zip -r "${{ github.event.repository.name }}" . \
+            -x "*.git*" \
+            -x "README.md" \
+            -x "addon-meta.yml" \
+            -x ".travis.yml" \
+            -x ".github/*"
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.vars.outputs.sha_short }}-${{ steps.tag_date.outputs.date }}
+          release_name: ${{ github.event.repository.name }} - ${{ steps.release_date.outputs.date }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./${{ github.event.repository.name }}.zip
+          asset_name: "${{ github.event.repository.name }}.zip"
+          asset_content_type: application/zip
