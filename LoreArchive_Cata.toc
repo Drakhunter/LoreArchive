@@ -1,7 +1,7 @@
 ## Interface: 40400
 ## Title: Lore Archive
 ## Notes: Collects and archives all in-game lore books, letters, and plaques.
-## Author: Antigravity
+## Author: TheOnlyCthulhu
 ## Version: 1.0.0
 ## SavedVariables: LoreArchiveDB
 
