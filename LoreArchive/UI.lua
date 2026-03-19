@@ -156,13 +156,24 @@ local function SetEditMode(enabled)
     end
 end
 
-UI.SearchBox = CreateFrame("EditBox", nil, ListFrame, "SearchBoxTemplate")
+UI.SearchBox = CreateFrame("EditBox", "LoreArchiveSearch", ListFrame, "InputBoxTemplate")
 UI.SearchBox:SetSize(220, 20)
 UI.SearchBox:SetPoint("TOPLEFT", 15, -12)
+UI.SearchBox:SetAutoFocus(false)
+UI.SearchBox:SetText("")
+UI.SearchBox:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
 UI.SearchBox:SetScript("OnTextChanged", function(self)
     searchText = self:GetText():lower()
     UI.UpdateList()
 end)
+local SearchLabel = UI.SearchBox:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+SearchLabel:SetPoint("LEFT", UI.SearchBox, "LEFT", 5, 0)
+SearchLabel:SetText("Search...")
+UI.SearchBox:SetScript("OnEditFocusGained", function() SearchLabel:Hide() end)
+UI.SearchBox:SetScript("OnEditFocusLost", function(self)
+    if self:GetText() == "" then SearchLabel:Show() else SearchLabel:Hide() end
+end)
+UI.ListFrame.searchBox = UI.SearchBox
 
 UI.GroupButton = CreateFrame("Button", nil, ListFrame, "UIPanelButtonTemplate")
 UI.GroupButton:SetSize(220, 22)
