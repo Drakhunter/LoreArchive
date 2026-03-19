@@ -1,4 +1,4 @@
-## Interface: 30405, 38000
+## Interface: 50500, 50503
 ## Title: Lore Archive
 ## Notes: Collects and archives all in-game lore books, letters, and plaques.
 ## Author: TheOnlyCthulhu
