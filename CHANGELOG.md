@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.2] - 2026-03-20
+
+### Added
+
+- Added automation for CurseForge and GitHub releases via GitHub Actions.
+- Created `.pkgmeta` to exclude development files from release packages.
+- Added CurseForge Project ID to all `.toc` files for automated packaging.
+
+### Changed
+
+- Enhanced UI list presentation with an active state for the selected item.
+- Bumped addon version to **1.1.2** across all supported clients.
+
+
 ## [1.1.1] - 2026-03-19
 
 - Fixed the SearchBox placeholder to disappear when field is focused.

@@ -4,6 +4,10 @@
 # The name of the package.
 package-as: LoreArchive/LoreArchive
 
+manual-changelog:
+ filename: CHANGELOG.md
+ markup-type: markdown
+
 # Files to ignore in the final zip package.
 ignore:
   - .git/
