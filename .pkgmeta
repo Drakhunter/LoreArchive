@@ -2,7 +2,7 @@
 # See https://github.com/BigWigsMods/packager/wiki/.pkgmeta-metadata for more details.
 
 # The name of the package.
-package-as: LoreArchive
+package-as: LoreArchive/LoreArchive
 
 # Files to ignore in the final zip package.
 ignore:
