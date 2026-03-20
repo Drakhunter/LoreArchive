@@ -2,8 +2,9 @@
 ## Title: Lore Archive
 ## Notes: Collects and archives all in-game lore books, letters, and plaques.
 ## Author: TheOnlyCthulhu
-## Version: 1.1.1
+## Version: 1.1.2
 ## SavedVariables: LoreArchiveDB
+## X-Curse-Project-ID: 1486058
 
 Core.lua
 Collector.lua

@@ -2,55 +2,21 @@ name: Addon release
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - '*'
+  workflow_dispatch:
 
 jobs:
-  Build:
-    name: Create release
+  release:
     runs-on: ubuntu-latest
     steps:
-      - name: Get current date for release
-        id: release_date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d %H:%M')"
-
-      - name: Get current date for tag
-        id: tag_date
-        run: echo "::set-output name=date::$(date +'%Y%m%d%H%M')"
-
-      - uses: actions/checkout@v3
-
-      - name: Set short sha
-        id: vars
-        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-
-      - name: Build project
-        run: |
-          # Zip only the addon folder (and its contents) so the release artifact matches a typical WoW AddOn deploy
-          zip -r "${{ github.event.repository.name }}" LoreArchive \
-            -x "LoreArchive/.git*" \
-            -x "LoreArchive/README.md" \
-            -x "LoreArchive/.travis.yml" \
-            -x "LoreArchive/.github/*"
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          tag_name: ${{ steps.vars.outputs.sha_short }}-${{ steps.tag_date.outputs.date }}
-          release_name: ${{ github.event.repository.name }} - ${{ steps.release_date.outputs.date }}
-          draft: false
-          prerelease: false
+          fetch-depth: 0
 
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
+      - name: Package and Release
+        uses: BigWigsMods/packager@v2
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ github.event.repository.name }}.zip
-          asset_name: "${{ github.event.repository.name }}.zip"
-          asset_content_type: application/zip
+          CF_API_KEY: ${{ secrets.CF_API_KEY }}
+          GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,20 @@
+# LoreArchive .pkgmeta file
+# See https://github.com/BigWigsMods/packager/wiki/.pkgmeta-metadata for more details.
+
+# The name of the package.
+package-as: LoreArchive
+
+# Files to ignore in the final zip package.
+ignore:
+  - .git/
+  - .github/
+  - .gitignore
+  - .pkgmeta
+  - .vscode/
+  - logo.png
+  - CHANGELOG.md
+  - README.md
+  - wowhead_data/
+
+# Optional: You can move files around if needed, but since your code is already in a 'LoreArchive' folder, 
+# the packager will handle it correctly if configured in the workflow.

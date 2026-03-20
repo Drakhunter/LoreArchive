@@ -19,6 +19,7 @@ addonTable.UI = UI
 
 -- Main Window
 UI.MainFrame = CreateThemedFrame("LoreArchiveFrame", UIParent)
+tinsert(UISpecialFrames, "LoreArchiveFrame")
 local MainFrame = UI.MainFrame
 MainFrame:SetSize(800, 600)
 MainFrame:SetPoint("CENTER")
@@ -188,7 +189,7 @@ UI.GroupButton:SetScript("OnClick", function(self)
 end)
 
 UI.ListScrollFrame = CreateFrame("ScrollFrame", "LoreArchiveListScrollFrame", ListFrame, "UIPanelScrollFrameTemplate")
-UI.ListScrollFrame:SetPoint("TOPLEFT", 8, -65)
+UI.ListScrollFrame:SetPoint("TOPLEFT", 12, -65)
 UI.ListScrollFrame:SetPoint("BOTTOMRIGHT", -30, 8)
 
 UI.ListContent = CreateFrame("Frame", nil, UI.ListScrollFrame)
@@ -281,6 +282,7 @@ local headerButtons = {}
 
 local function ShowLoreFragment(fragment)
     UI._selectedBook = fragment
+    UI.UpdateList()
 
     SetEditMode(false)
     UI.ReadTitle:SetText(fragment.title or "Unknown Title")
@@ -402,10 +404,18 @@ function UI.UpdateList()
             for _, book in ipairs(groupBooks) do
                 local btn = listButtons[bookIdx]
                 if not btn then
-                    btn = CreateFrame("Button", nil, UI.ListContent)
+                    btn = CreateFrame("Button", nil, UI.ListContent, "BackdropTemplate")
                     btn:SetSize(210, 24)
+                    btn:SetBackdrop({
+                        bgFile = "Interface\\ChatFrame\\ChatFrameBackground",
+                        edgeFile = nil,
+                        tile = true,
+                        tileSize = 16,
+                        edgeSize = 0,
+                        insets = { left = 0, right = 0, top = 0, bottom = 0 }
+                    })
                     btn.Text = btn:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-                    btn.Text:SetPoint("LEFT", mode == "None" and 4 or 16, 0)
+                    btn.Text:SetPoint("LEFT", mode == "None" and 6 or 16, 0)
                     btn.Text:SetPoint("RIGHT", -4, 0)
                     btn.Text:SetJustifyH("LEFT")
                     btn.Text:SetWordWrap(false)
@@ -414,10 +424,16 @@ function UI.UpdateList()
                 end
 
                 btn:SetPoint("TOPLEFT", 0, -yOffset)
-                btn.Text:SetPoint("LEFT", mode == "None" and 4 or 16, 0)
+                btn.Text:SetPoint("LEFT", mode == "None" and 6 or 16, 0)
                 btn.Text:SetText(book.title)
                 btn:Show()
                 btn:SetScript("OnClick", function() ShowLoreFragment(book) end)
+                local isActive = (UI._selectedBook == book)
+                if isActive then
+                    btn:SetBackdropColor(0, 0.5, 1, 0.35) -- active
+                else
+                    btn:SetBackdropColor(0, 0, 0, 0) -- normal
+                end
 
                 yOffset = yOffset + 24
                 bookIdx = bookIdx + 1
