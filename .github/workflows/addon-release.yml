@@ -5,9 +5,22 @@ on:
     tags:
       - '*'
   workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Manual Release Type'
+        required: true
+        default: 'beta'
+        type: choice
+        options:
+          - 'beta'
+          - 'stable'
 
 jobs:
-  release:
+  stable-release:
+    name: Stable Release
+    if: |
+      (github.event_name == 'push' && !contains(github.ref_name, '-beta')) ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.release_type == 'stable')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -15,8 +28,28 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Package and Release
+      - name: Package and Release (Stable)
         uses: BigWigsMods/packager@v2
         env:
           CF_API_KEY: ${{ secrets.CF_API_KEY }}
           GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TYPE: 'release'
+
+  beta-release:
+    name: Beta Release
+    if: |
+      (github.event_name == 'push' && contains(github.ref_name, '-beta')) ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.release_type == 'beta')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Package and Release (Beta)
+        uses: BigWigsMods/packager@v2
+        env:
+          CF_API_KEY: ${{ secrets.CF_API_KEY }}
+          GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TYPE: 'beta'
