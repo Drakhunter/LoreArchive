@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2026-03-23
+
+### Added
+
+- Added **Completion Tracking**! The main UI now displays progress as "**X / Y collected**".
+- Integrated a comprehensive lore database (`readable_items.lua`) containing **433 unique titles** from items and world objects.
+- Added a new **Addon Options Menu** (Game Settings integration) with client-agnostic registration for modern, legacy, and anniversary WoW versions.
+- Added a **Debug Data Inspector** window to help troubleshoot lore capture issues and view raw item data (accessible via Options).
+
+### Changed
+
+- Bumped addon version to **1.2.0** across all supported clients.
+
 ## [1.1.2] - 2026-03-20
 
 ### Added

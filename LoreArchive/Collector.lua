@@ -75,6 +75,11 @@ end
 frame:SetScript("OnEvent", function(self, event, ...)
     if event == "ITEM_TEXT_READY" then
         isReadingLore = true
+        
+        -- Trigger Data Inspector if Debug Mode is ON
+        if LoreArchiveDB and LoreArchiveDB.debugMode and addonTable.UI and addonTable.UI.ShowInspector then
+            addonTable.UI.ShowInspector()
+        end
 
         -- Sometimes title is empty at first, grab what we can
         local title = ItemTextGetItem() or currentLoreTitle
