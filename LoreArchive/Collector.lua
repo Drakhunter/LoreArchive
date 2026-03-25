@@ -36,6 +36,10 @@ local function SaveLore(title, text)
     local db = addonTable.db
     if not db then return end
 
+    local mapID = C_Map.GetBestMapForUnit("player")
+    local zone = GetZoneName(mapID)
+    local source = GetSourceType(title)
+
     local existingFragment = false
     -- Check if we already have it
     for _, book in ipairs(db.books) do
@@ -45,13 +49,13 @@ local function SaveLore(title, text)
             if string.len(text) > string.len(book.text) then
                 book.text = text
             end
+            -- Retroactively fill in missing metadata
+            book.zone = book.zone or zone
+            book.source = book.source or source
+            book.mapID = book.mapID or mapID
             break
         end
     end
-
-    local mapID = C_Map.GetBestMapForUnit("player")
-    local zone = GetZoneName(mapID)
-    local source = GetSourceType(title)
 
     if not existingFragment then
         table.insert(db.books, {

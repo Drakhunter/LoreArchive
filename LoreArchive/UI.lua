@@ -301,7 +301,7 @@ local function Initialize()
     UI.ReadHTML = CreateFrame("SimpleHTML", nil, UI.ReadContent)
     UI.ReadHTML:SetPoint("TOPLEFT", 0, 0)
     UI.ReadHTML:SetWidth(430)
-    UI.ReadHTML:SetFontObject("P", GameFontNormal)
+    UI.ReadHTML:SetFontObject("P", GameFontHighlight)
     UI.ReadHTML:SetFontObject("H1", GameFontNormalHuge)
     UI.ReadHTML:SetFontObject("H2", GameFontNormalLarge)
     UI.ReadHTML:SetFontObject("H3", GameFontNormal)
@@ -321,20 +321,20 @@ local function Initialize()
         UI.TagsEdit:SetText(table.concat(tags, ", "))
         UpdateTagPills(tags)
 
+        -- Shared metadata construction
         local metadata = ""
         if fragment.zone then
-            metadata = metadata .. "|cFF00FF00Zone:|r " .. fragment.zone .. "  "
+            metadata = metadata .. "|cff00ff00Zone:|r " .. fragment.zone .. "  "
         end
         if fragment.source then
-            metadata = metadata .. "|cFFFFFF00Source:|r " .. fragment.source .. "  "
+            metadata = metadata .. "|cffffff00Source:|r " .. fragment.source .. "  "
         end
 
         local displayText = fragment.text or ""
-        local isHTML = displayText:find("<HTML>")
+        local isHTML = displayText:lower():find("<html")
 
         if isHTML then
-            -- Robust cleanup: remove all HTML and BODY tags to avoid nested structures
-            -- Lua 5.1 doesn't support '?' as an optional quantifier, so we use multiple gsubs or broader patterns
+            -- Robust cleanup: remove outer HTML/BODY tags
             local clean = displayText:gsub("<[hH][tT][mM][lL]>", ""):gsub("</[hH][tT][mM][lL]>", "")
             clean = clean:gsub("<[bB][oO][dD][yY]>", ""):gsub("</[bB][oO][dD][yY]>", "")
             clean = clean:gsub("\r", "") -- Remove carriage returns
@@ -343,18 +343,14 @@ local function Initialize()
             -- Trim whitespace
             clean = clean:match("^%s*(.-)%s*$") or clean
 
+            -- Convert WoW color codes to HTML font tags
+            local metaHTML = metadata:gsub("|c[fF][fF](%x%x%x%x%x%x)(.-)|[rR]", "<font color=\"%1\">%2</font>")
+
             -- Construct a single valid HTML block
             local finalHTML = "<HTML><BODY>"
-
-            -- Add metadata
-            local metaText = ""
-            if fragment.zone then metaText = metaText .. "Zone: " .. fragment.zone .. "  " end
-            if fragment.source then metaText = metaText .. "Source: " .. fragment.source end
-
-            if metaText ~= "" then
-                finalHTML = finalHTML .. "<P>" .. metaText .. "</P><BR/>"
+            if metaHTML ~= "" then
+                finalHTML = finalHTML .. "<P>" .. metaHTML .. "</P><BR/>"
             end
-
             finalHTML = finalHTML .. clean .. "</BODY></HTML>"
 
             UI.ReadHTML:SetText(finalHTML)
