@@ -14,3 +14,9 @@ Desktop.ini
 .idea/
 *.swp
 *.swo
+
+# Large local data dumps (not committed)
+# Keep raw/big exports out of the repo.
+wowhead_data/
+
+TODO.md
