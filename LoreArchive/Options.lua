@@ -25,7 +25,13 @@ desc:SetText("Configure settings for your Lore collection.")
 -- Debug Mode Checkbox
 local debugCheck = CreateFrame("CheckButton", "LoreArchiveDebugCheck", f, "InterfaceOptionsCheckButtonTemplate")
 debugCheck:SetPoint("TOPLEFT", 16, -60)
-_G[debugCheck:GetName() .. "Text"]:SetText("Enable Data Inspector (Debug)")
+local checkText = _G[debugCheck:GetName() .. "Text"] or debugCheck.Text
+if not checkText then
+    checkText = debugCheck:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+    checkText:SetPoint("LEFT", debugCheck, "RIGHT", 4, 0)
+    debugCheck.Text = checkText
+end
+checkText:SetText("Enable Data Inspector (Debug)")
 debugCheck.tooltipText = "When enabled, opening a lore object will also show a technical Data Inspector window with IDs and raw text."
 
 debugCheck:SetScript("OnShow", function(self)
@@ -40,10 +46,15 @@ debugCheck:SetScript("OnClick", function(self)
     print("|cFF00FFFF[Lore Archive]|r Debug Mode is now " .. (checked and "|cFF00FF00ON|r" or "|cFFFF0000OFF|r"))
 end)
 
+-- Dynamic AddOn version retrieval
+local addonVersion = (C_AddOns and C_AddOns.GetAddOnMetadata and C_AddOns.GetAddOnMetadata(addonName, "Version"))
+    or (GetAddOnMetadata and GetAddOnMetadata(addonName, "Version"))
+    or "1.2.0"
+
 -- Help text
 local helpText = f:CreateFontString(nil, "OVERLAY", "GameFontDisable")
 helpText:SetPoint("BOTTOMLEFT", 16, 16)
-helpText:SetText("Lore Archive v1.2.0 - All features active.")
+helpText:SetText("Lore Archive v" .. addonVersion .. " - All features active.")
 
 -- Register with the WoW Options Interface
 local function RegisterOptions()
@@ -60,6 +71,7 @@ local function RegisterOptions()
 
         -- Broad scan for modern API candidates
         local candidates = {
+            "RegisterCanvasLayoutCategory",
             "RegisterCanvasLayout",
             "RegisterAddOnCanvasLayout",
             "RegisterLayout", 

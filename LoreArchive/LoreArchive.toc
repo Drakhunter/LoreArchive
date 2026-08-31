@@ -1,18 +1,12 @@
-## Interface: 120005
-## Interface-Retail: 120005
-## Interface-Vanilla: 11508
-## Interface-Cata: 40402
-## Interface-Wrath: 30405
-## Interface-TBC_Anniversary: 20505
+## Interface: 110007, 110100, 110200, 120001, 120005, 50500, 50503, 40402, 38000, 30405, 20505, 11508
 ## Title: Lore Archive
 ## Notes: Collects and archives all in-game lore books, letters, and plaques.
 ## Author: TheOnlyCthulhu
-## Version: 1.2.2
+## Version: 1.2.0
 ## SavedVariables: LoreArchiveDB
 ## X-Curse-Project-ID: 1486058
-## Globe: check-classic
 
-data/readable_items.lua
+data\readable_items.lua
 Core.lua
 Collector.lua
 Inspector.lua
