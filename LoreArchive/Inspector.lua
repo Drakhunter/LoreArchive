@@ -1,39 +1,42 @@
 local addonName, addonTable = ...
 local UI = addonTable.UI
 
--- --- Data Inspector (The "Crazy" Debug Window) ---
-UI.Inspector = addonTable.CreateThemedFrame("LoreArchiveInspector", UIParent)
+-- Data Inspector (Debug Window)
+UI.Inspector = addonTable.CreateThemedFrame("LoreArchiveInspector", UIParent, false)
 local Inspector = UI.Inspector
-Inspector:SetSize(450, 450)
+Inspector:SetSize(460, 480)
 Inspector:SetPoint("CENTER", 150, 50)
 Inspector:Hide()
-Inspector:SetFrameStrata("TOOLTIP") -- Topmost
+Inspector:SetFrameStrata("TOOLTIP")
 table.insert(UISpecialFrames, "LoreArchiveInspector")
 
 Inspector.Title = Inspector:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
-Inspector.Title:SetPoint("TOP", 0, -18)
+Inspector.Title:SetPoint("TOPLEFT", 16, -6)
 Inspector.Title:SetText("|cFF00FFFFData Inspector|r")
 
--- Close Button
-Inspector.CloseButton = CreateFrame("Button", nil, Inspector, "UIPanelCloseButton")
-Inspector.CloseButton:SetPoint("TOPRIGHT", -4, -4)
-Inspector.CloseButton:SetScript("OnClick", function() Inspector:Hide() end)
+if not Inspector.CloseButton then
+    Inspector.CloseButton = CreateFrame("Button", nil, Inspector, "UIPanelCloseButton")
+    Inspector.CloseButton:SetPoint("TOPRIGHT", -4, -4)
+end
+Inspector.CloseButton:SetScript("OnClick", function()
+    Inspector:Hide()
+    addonTable.PlaySound("IG_CHARACTER_INFO_CLOSE", 837)
+end)
 
 -- Scroll Area for data
 local iScroll = CreateFrame("ScrollFrame", nil, Inspector, "UIPanelScrollFrameTemplate")
-iScroll:SetPoint("TOPLEFT", 20, -50)
-iScroll:SetPoint("BOTTOMRIGHT", -35, 20)
+iScroll:SetPoint("TOPLEFT", 16, -36)
+iScroll:SetPoint("BOTTOMRIGHT", -32, 16)
 
 local iContent = CreateFrame("EditBox", nil, iScroll)
 iContent:SetMultiLine(true)
 iContent:SetFontObject("ChatFontNormal")
-iContent:SetWidth(380)
+iContent:SetWidth(390)
 iContent:SetAutoFocus(false)
 iContent:SetScript("OnEscapePressed", function() Inspector:Hide() end)
 iScroll:SetScrollChild(iContent)
 Inspector.EditBox = iContent
 
--- Attempt to find IDs from Target or Mouseover
 local function GetIDFromGUID(guid)
     if not guid then return "Unknown" end
     local type, _, _, _, _, id = strsplit("-", guid)
@@ -53,7 +56,6 @@ function UI.ShowInspector()
     local targetID = GetIDFromGUID(UnitGUID("target"))
     local mouseoverID = GetIDFromGUID(UnitGUID("mouseover"))
     
-    -- If it's an item on cursor
     local _, cursorID = GetCursorInfo()
     cursorID = cursorID and tostring(cursorID) or "None"
 

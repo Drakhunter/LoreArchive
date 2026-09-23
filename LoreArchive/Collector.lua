@@ -3,8 +3,7 @@ local addonName, addonTable = ...
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("ITEM_TEXT_READY")
 frame:RegisterEvent("ITEM_TEXT_CLOSED")
--- Depending on exact wow version or event, sometimes lore books trigger different events.
--- ITEM_TEXT_READY is standard for reading readable objects.
+frame:RegisterEvent("PLAYER_LOGOUT")
 
 local currentLoreTitle = ""
 local currentLorePages = {}
@@ -17,7 +16,7 @@ local function GetZoneName(mapID)
 end
 
 local function GetSourceType(title)
-    if not title then return "Unknown" end
+    if not title then return "Book" end
     title = title:lower()
     if title:find("scroll") or title:find("schriftrolle") then
         return "Scroll"
@@ -53,6 +52,7 @@ local function SaveLore(title, text)
             book.zone = book.zone or zone
             book.source = book.source or source
             book.mapID = book.mapID or mapID
+            book.read = true
             break
         end
     end
@@ -65,6 +65,8 @@ local function SaveLore(title, text)
             zone = zone,
             source = source,
             tags = {}, -- Ready for manual tagging
+            favorite = false,
+            read = true,
             date = date("%Y-%m-%d %H:%M:%S")
         })
         print("|cFF00FFFF[Lore Archive]|r Collected new lore: " .. title .. " (" .. zone .. ")")
@@ -96,7 +98,7 @@ frame:SetScript("OnEvent", function(self, event, ...)
             local page = ItemTextGetPage() or 1
             currentLorePages[page] = text
         end
-    elseif event == "ITEM_TEXT_CLOSED" then
+    elseif event == "ITEM_TEXT_CLOSED" or event == "PLAYER_LOGOUT" then
         if isReadingLore then
             -- Fallback if title was never captured
             if currentLoreTitle == "" then
