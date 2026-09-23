@@ -1,4 +1,4 @@
-## Interface: 110007, 110100, 110200, 120001, 120005, 50500, 50503, 40402, 38000, 30405, 20505, 11508
+## Interface: 110007, 110100, 110200, 120001, 120005, 50500, 50503, 40402, 38000, 30405, 20505, 11508,16001
 ## Title: Lore Archive
 ## Notes: Collects and archives all in-game lore books, letters, and plaques.
 ## Author: TheOnlyCthulhu
