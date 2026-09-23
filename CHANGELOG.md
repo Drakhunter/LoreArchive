@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.3] - 2026-09-23
+
+### Changed
+
+- Updated interface version numbers to latest.
+
 ## [1.2.2] - 2026-09-23
 
 ### Added
