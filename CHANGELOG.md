@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.2] - 2026-09-23
+
+### Added
+
+- Added support for WoW Forever (interface version `16001`).
+- Added completion percentage display to the collection progress counter.
+
+### Changed
+
+- Cached readable items total count to optimize collection list rendering performance.
+- Debounced search box input to reduce UI redraw overhead while typing.
+- Improved multi-page lore text accumulation to prevent page duplication on non-sequential navigation.
+- Updated dynamic addon version fallback in Options to `1.2.2`.
+
+## [1.2.1] - 2026-04-30
+
+### Changed
+
+- Consolidated TOC files across clients.
+- Improved Classic Era and Vanilla client compatibility.
+- Enhanced Options UI with dynamic version retrieval.
+
 ## [1.2.0] - 2026-03-23
 
 ### Added
@@ -27,7 +49,6 @@ All notable changes to this project will be documented in this file.
 
 - Enhanced UI list presentation with an active state for the selected item.
 - Bumped addon version to **1.1.2** across all supported clients.
-
 
 ## [1.1.1] - 2026-03-19
 

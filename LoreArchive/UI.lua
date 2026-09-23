@@ -184,9 +184,18 @@ local function Initialize()
     UI.SearchBox:SetAutoFocus(false)
     UI.SearchBox:SetText("")
     UI.SearchBox:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
+    local searchUpdatePending = false
     UI.SearchBox:SetScript("OnTextChanged", function(self)
-        searchText = self:GetText():lower()
-        UI.UpdateList()
+        local text = self:GetText():lower()
+        if text == searchText then return end
+        searchText = text
+        if not searchUpdatePending then
+            searchUpdatePending = true
+            C_Timer.After(0.15, function()
+                searchUpdatePending = false
+                UI.UpdateList()
+            end)
+        end
     end)
     local SearchLabel = UI.SearchBox:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
     SearchLabel:SetPoint("LEFT", UI.SearchBox, "LEFT", 5, 0)
@@ -374,18 +383,25 @@ local function Initialize()
         end)
     end
 
+    local function GetTotalReadableCount()
+        if not addonTable.TotalReadableItems then
+            local count = 0
+            if addonTable.ReadableItems then
+                for _ in pairs(addonTable.ReadableItems) do
+                    count = count + 1
+                end
+            end
+            addonTable.TotalReadableItems = count
+        end
+        return addonTable.TotalReadableItems
+    end
+
     function UI.UpdateList()
         local db = addonTable.db
         if not db or not db.books then return end
 
         -- Update Progress Counter
-        local totalItems = 0
-        if addonTable.ReadableItems then
-            for _ in pairs(addonTable.ReadableItems) do
-                totalItems = totalItems + 1
-            end
-        end
-
+        local totalItems = GetTotalReadableCount()
         local collectedCount = 0
         local seenInDB = {}
         for _, book in ipairs(db.books) do
@@ -396,7 +412,12 @@ local function Initialize()
         end
 
         if MainFrame.ProgressText then
-            MainFrame.ProgressText:SetText(string.format("%d / %d collected", collectedCount, totalItems))
+            if totalItems > 0 then
+                local pct = (collectedCount / totalItems) * 100
+                MainFrame.ProgressText:SetText(string.format("%d / %d collected (%.1f%%)", collectedCount, totalItems, pct))
+            else
+                MainFrame.ProgressText:SetText(string.format("%d collected", #db.books))
+            end
         end
 
         -- Hide all buttons

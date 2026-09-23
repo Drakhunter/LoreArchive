@@ -7,7 +7,7 @@ frame:RegisterEvent("ITEM_TEXT_CLOSED")
 -- ITEM_TEXT_READY is standard for reading readable objects.
 
 local currentLoreTitle = ""
-local currentLoreText = ""
+local currentLorePages = {}
 local isReadingLore = false
 
 local function GetZoneName(mapID)
@@ -92,13 +92,9 @@ frame:SetScript("OnEvent", function(self, event, ...)
         end
 
         local text = ItemTextGetText()
-        if text then
-            local page = ItemTextGetPage()
-            if page == 1 then
-                currentLoreText = text
-            else
-                currentLoreText = currentLoreText .. "\n\n" .. text
-            end
+        if text and text ~= "" then
+            local page = ItemTextGetPage() or 1
+            currentLorePages[page] = text
         end
     elseif event == "ITEM_TEXT_CLOSED" then
         if isReadingLore then
@@ -107,12 +103,24 @@ frame:SetScript("OnEvent", function(self, event, ...)
                 currentLoreTitle = "Unknown Fragment (" .. date("%Y-%m-%d %H:%M:%S") .. ")"
             end
 
-            SaveLore(currentLoreTitle, currentLoreText)
+            local pageNums = {}
+            for p in pairs(currentLorePages) do
+                table.insert(pageNums, p)
+            end
+            table.sort(pageNums)
+
+            local pagesOrdered = {}
+            for _, p in ipairs(pageNums) do
+                table.insert(pagesOrdered, currentLorePages[p])
+            end
+            local fullText = table.concat(pagesOrdered, "\n\n")
+
+            SaveLore(currentLoreTitle, fullText)
 
             -- Reset state
             isReadingLore = false
             currentLoreTitle = ""
-            currentLoreText = ""
+            currentLorePages = {}
         end
     end
 end)

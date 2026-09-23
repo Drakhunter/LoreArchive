@@ -32,7 +32,8 @@ if not checkText then
     debugCheck.Text = checkText
 end
 checkText:SetText("Enable Data Inspector (Debug)")
-debugCheck.tooltipText = "When enabled, opening a lore object will also show a technical Data Inspector window with IDs and raw text."
+debugCheck.tooltipText =
+"When enabled, opening a lore object will also show a technical Data Inspector window with IDs and raw text."
 
 debugCheck:SetScript("OnShow", function(self)
     self:SetChecked(LoreArchiveDB and LoreArchiveDB.debugMode)
@@ -49,7 +50,7 @@ end)
 -- Dynamic AddOn version retrieval
 local addonVersion = (C_AddOns and C_AddOns.GetAddOnMetadata and C_AddOns.GetAddOnMetadata(addonName, "Version"))
     or (GetAddOnMetadata and GetAddOnMetadata(addonName, "Version"))
-    or "1.2.0"
+    or "1.2.2"
 
 -- Help text
 local helpText = f:CreateFontString(nil, "OVERLAY", "GameFontDisable")
@@ -74,10 +75,10 @@ local function RegisterOptions()
             "RegisterCanvasLayoutCategory",
             "RegisterCanvasLayout",
             "RegisterAddOnCanvasLayout",
-            "RegisterLayout", 
+            "RegisterLayout",
             "RegisterCanvasCategory"
         }
-        
+
         for _, name in ipairs(candidates) do
             if Settings[name] then
                 local category, layout = Settings[name](f, f.name)
@@ -105,7 +106,7 @@ local function RegisterOptions()
             addonTable.OptionsCategory = category
             return
         end
-        
+
         -- Last ditch modern attempt
         if Settings.RegisterAddOnCategory then
             local ok, category = pcall(Settings.RegisterAddOnCategory, f, f.name)
